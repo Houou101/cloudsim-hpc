@@ -1,5 +1,6 @@
 package com.example.restapi;
 
+import com.example.restapi.CloudSimRunner;
 import com.example.mongodb.MongoDBManager;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 public class CloudSimController {
@@ -39,19 +43,17 @@ public class CloudSimController {
         List<Document> instances = manager.getValidInstances();
 
         for (Document instance : instances) {
-            // Sichere Feldabrufe für Azure und AWS
             String name = getStringValue(instance, "Name der Größe", "InstanceType");
             Double vcpus = getDoubleValue(instance, "vCPUs (Anzahl)", "vCPUs");
             Double frequency = getDoubleValue(instance, "Spitzenfrequenz für alle Kerne (GHz)", "BaseClockSpeedGhz");
 
-            // Überspringe Instanzen, bei denen wichtige Felder fehlen
             if (name == null || vcpus == null || frequency == null || frequency == 0.0) {
                 System.out.println("Ungültige Instanz übersprungen: " + instance.toJson());
                 continue;
             }
 
-            // Berechne die Ausführungszeit
-            double executionTime = cloudletLength / (vcpus * frequency);
+            // CloudSim Simulation starten
+            double executionTime = CloudSimRunner.runCloudSimSimulation(name, vcpus.intValue(), frequency, cloudletLength);
 
             // Ergebnis speichern
             Map<String, Object> result = new HashMap<>();
@@ -82,5 +84,4 @@ public class CloudSimController {
         }
         return null;
     }
-
 }
