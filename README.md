@@ -12,10 +12,10 @@ Sobald der Server läuft, lassen sich Anfragen wie folgt stellen:
 
 - Für AWS-Simulation:
   ```
-  http://192.168.178.28:8080/simulate/aws?cloudletLength=2000
+  http://localhost:8080/simulate/aws?cloudletLength=2000
   ```
 - Für Azure-Simulation:
   ```
-  http://192.168.178.28:8080/simulate/azure?cloudletLength=2000
+  http://localhost:8080/simulate/azure?cloudletLength=2000
   ```
 
